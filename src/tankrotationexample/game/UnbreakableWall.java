@@ -1,5 +1,8 @@
 package tankrotationexample.game;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
 public class UnbreakableWall extends Wall{
 	int x,y;
 	int state;
@@ -12,8 +15,8 @@ public class UnbreakableWall extends Wall{
 	}
 	
 	@Override
-	public abstract void drawWall(Graphics g){
+	public void drawWall(Graphics g){
 		Graphics2D g2 = (Graphics2D) g;
-		g2.drawImage(this.image,0,0,null);
+		g2.drawImage(this.wallImage,0,0,null);
 	}
 }

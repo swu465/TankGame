@@ -1,9 +1,12 @@
 package tankrotationexample.game;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
 public class BreakableWall extends Wall{
 	int x,y;
-	int state;
-	BufferedImage wallImage;
+	int state = 2;
+	BufferedImage wallImage,dyingWall;
 	
 	public BreakableWall(int x,int y,BufferedImage image){
 		this.x = x;
@@ -12,8 +15,13 @@ public class BreakableWall extends Wall{
 	}
 	@Override
 	public void drawWall(Graphics g){
-		Graphics2D g2 = (Graphics2D)g;
-		g2.drawImage(this.wallImage,x,y,null);
+		if(state > 0){
+			Graphics2D g2 = (Graphics2D)g;
+			g2.drawImage(this.wallImage,x,y,null);
+		}else if (state == 1 ){
+			//almost broken wall image
+		}
+
 	}
 	
 }

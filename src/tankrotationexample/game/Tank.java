@@ -121,7 +121,7 @@ public class Tank{
 
 
 
-
+//write the same function, but for keeping the split screen on the screen.
     private void checkBorder() {
         if (x < 30) {
             x = 30;
@@ -142,10 +142,14 @@ public class Tank{
         return "x=" + x + ", y=" + y + ", angle=" + angle;
     }
 
-
+//to draw tank in middle. for left screen width/4, screen height/2
+    //world width + height - cordinnate and then do divisions?
+    //x - screenw/4
+    //y- - screeny /2
     void drawImage(Graphics g) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
+
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(this.img, rotation, null);
 		//????
