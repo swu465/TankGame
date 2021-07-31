@@ -14,14 +14,16 @@ public class BreakableWall extends Wall{
 		this.wallImage = image;
 	}
 	@Override
-	public void drawWall(Graphics g){
+	public void drawImage(Graphics g){
 		if(state > 0){
 			Graphics2D g2 = (Graphics2D)g;
 			g2.drawImage(this.wallImage,x,y,null);
-		}else if (state == 1 ){
-			//almost broken wall image
 		}
-
 	}
-	
+
+	@Override
+	public void update() {
+		//draw image?
+	}
+
 }

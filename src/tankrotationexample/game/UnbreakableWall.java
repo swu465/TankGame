@@ -15,8 +15,13 @@ public class UnbreakableWall extends Wall{
 	}
 	
 	@Override
-	public void drawWall(Graphics g){
+	public void drawImage(Graphics g){
 		Graphics2D g2 = (Graphics2D) g;
-		g2.drawImage(this.wallImage,0,0,null);
+		g2.drawImage(this.wallImage,x,y,null);
+	}
+
+	@Override
+	public void update() {
+
 	}
 }

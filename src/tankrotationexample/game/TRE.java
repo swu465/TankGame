@@ -32,7 +32,8 @@ public class TRE extends JPanel implements Runnable {
     private Tank t1,t2;
     private Launcher lf;
     private long tick = 0;
-    ArrayList<Wall> walls;
+    ArrayList<GameObject> gameObjects;
+	static long frameCount = 0;
 
     public TRE(Launcher lf){
         this.lf = lf;
@@ -44,19 +45,21 @@ public class TRE extends JPanel implements Runnable {
            this.resetGame();
            while (true) {
                 this.tick++;
-                this.t1.update(); // update tank
-				this.t2.update();
+				gameObjects.forEach(gameObjects -> gameObjects.update());
+                //this.t1.update(); // update tank
+				//this.t2.update();
                 this.repaint();   // redraw game
                 Thread.sleep(1000 / 144); //sleep for a few milliseconds
-                System.out.println(t1);
+                //System.out.println(t1);
+				frameCount++;
 				/*
                  * simulate an end game event
                  * we will do this with by ending the game when drawn 2000 frames have been drawn
                  */
-                if(this.tick > 2000){
+                /*if(this.tick > 2000){
                     this.lf.setFrame("end");
                     return;
-                }
+                }*/
             }
        } catch (InterruptedException ignored) {
            System.out.println(ignored);
@@ -89,17 +92,13 @@ public class TRE extends JPanel implements Runnable {
         BufferedImage t2img = null;
         BufferedImage godWall = null;
         BufferedImage normalWall = null;
-        walls = new ArrayList<>();
+        gameObjects = new ArrayList<>();
         try {
             /*
              * note class loaders read files from the out folder (build folder in Netbeans) and not the
              * current working directory.
              */
-            t1img = read(Objects.requireNonNull(TRE.class.getClassLoader().getResource("tank1.png")));
-            t2img = read(Objects.requireNonNull(TRE.class.getClassLoader().getResource("tank2.png")));
-            godWall = read(Objects.requireNonNull(TRE.class.getClassLoader().getResource("unbreakablewall.png")));
-            normalWall = read(Objects.requireNonNull(TRE.class.getClassLoader().getResource("breakablewall.png")));
-            InputStreamReader isr = new InputStreamReader(TRE.class.getClassLoader().getResourceAsStream("maps/map1.png"));
+            InputStreamReader isr = new InputStreamReader(TRE.class.getClassLoader().getResourceAsStream("map1.txt"));
             BufferedReader mapReader = new BufferedReader(isr);
             //0 = nothing
             //2 = breakable wall
@@ -115,17 +114,21 @@ public class TRE extends JPanel implements Runnable {
             int numRows = Integer.parseInt(mapInfo[1]);
             for(int curRow = 0; curRow< numRows; curRow++){
                 row = mapReader.readLine();
+                //System.out.println("for loop "+row);
                 mapInfo = row.split("\t");
                 for(int curCol = 0; curCol < numCols; curCol++){
+                    //System.out.println(mapInfo[curCol]);
                     switch (mapInfo[curCol]){
                         case "2":
-                            BreakableWall brWall = new BreakableWall(curCol*30,curRow*30,normalWall);
-                            this.walls.add(brWall);
+                            BreakableWall brWall = new BreakableWall(curCol*30,curRow*30,GameResource.get("breakableWall"));
+                            System.out.println("Breakable wall");
+                            this.gameObjects.add(brWall);
                             break;
                         case "3":
                         case "9":
-                            UnbreakableWall ubrWall = new UnbreakableWall(curCol*30,curRow*30,godWall);
-                            this.walls.add(ubrWall);
+                            UnbreakableWall ubrWall = new UnbreakableWall(curCol*30,curRow*30,GameResource.get("unbreakableWall"));
+                            this.gameObjects.add(ubrWall);
+                            //System.out.println("unbreakable wall");
                             break;
                     }
                 }
@@ -134,35 +137,53 @@ public class TRE extends JPanel implements Runnable {
             System.out.println(ex.getMessage());
             ex.printStackTrace();
         }
-
-        t1 = new Tank(300, 300, 0, 0, 0, t1img);
-        t2 = new Tank(200,200,0,0,0,t2img);
-        TankControl tc1 = new TankControl(t1, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
+        //ask prof about Tank t1 = ... here vs private member
+        t1 = new Tank(300, 300, 0, 0, 0, GameResource.get("tankOne"));
+        t2 = new Tank(1000,800,0,0,180,GameResource.get("tankTwo"));
+        TankControl tc1 = new TankControl(t1, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SPACE);
+        TankControl tc2 = new TankControl(t2, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
+		this.gameObjects.add(t1);
+		this.gameObjects.add(t2);
         this.setBackground(Color.BLACK);
         this.lf.getJf().addKeyListener(tc1);
+        this.lf.getJf().addKeyListener(tc2);
     }
 
-
+    public void checkCollisions(){
+        //has to check for walls,bullets and tanks.
+        if(t1.getHitBox().intersects(t2.getHitBox())){
+            //object instanceof tank/bullet/wall?
+            t1.collisionHappened();
+            t2.collisionHappened();
+            System.out.println("Crash happened with something");
+        }
+    }
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         Graphics2D buffer = world.createGraphics();
         buffer.setColor(Color.BLACK);
         buffer.fillRect(0,0,GameConstants.WORLD_WIDTH,GameConstants.WORLD_HEIGHT);
-        this.walls.forEach(wall->wall.drawWall(buffer));
-        this.t1.drawImage(buffer);
-		this.t2.drawImage(buffer);
-		BufferedImage leftHalf = world.getSubimage(0,0,GameConstants.GAME_SCREEN_WIDTH/2,GameConstants.GAME_SCREEN_HEIGHT);
+        this.gameObjects.forEach(wall->wall.drawImage(buffer));
+        //this.t1.drawImage(buffer);
+		//this.t2.drawImage(buffer);
+		BufferedImage leftHalf = world.getSubimage(t1.getSplitX(),
+                t1.getSplitY(),
+                GameConstants.GAME_SCREEN_WIDTH/2,
+                GameConstants.GAME_SCREEN_HEIGHT);
+		System.out.println("tank 1:\nx: "+t1.getSplitX()+"\ty: "+t1.getSplitY());
+		System.out.println("tank 2:\nx: "+t2.getSplitX()+"\ty: "+t2.getSplitY());
 		//x = tank.getX(),y=tank.getY()
         //do not follow this exactly. was from video. will need something like this
-		BufferedImage rightHalf = world.getSubimage(900,1000,GameConstants.GAME_SCREEN_WIDTH/2,GameConstants.GAME_SCREEN_HEIGHT);
+		BufferedImage rightHalf = world.getSubimage(t2.getSplitX(),t2.getSplitY(),GameConstants.GAME_SCREEN_WIDTH/2,GameConstants.GAME_SCREEN_HEIGHT);
 		BufferedImage miniMap = world.getSubimage(0,0,GameConstants.WORLD_WIDTH,GameConstants.WORLD_WIDTH);
 		g2.drawImage(leftHalf,0,0,null);
 		g2.drawImage(rightHalf,GameConstants.GAME_SCREEN_WIDTH/2+4,0,null);
 		g2.scale(.15,.15);
 		//find place to put minimap
-		g2.drawImage(miniMap,200,200,null);
-        g2.drawImage(world,0,0,null);
+		g2.drawImage(miniMap,2500,0,null);
+		//g2.scale();
+        //g2.drawImage(world,0,0,null);
     }
 
 }
