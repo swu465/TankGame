@@ -6,6 +6,7 @@
 package tankrotationexample.game;
 
 
+import jdk.jshell.execution.Util;
 import tankrotationexample.GameConstants;
 import tankrotationexample.Launcher;
 
@@ -167,23 +168,62 @@ public class TRE extends JPanel implements Runnable {
         this.gameObjects.forEach(wall->wall.drawImage(buffer));
         //this.t1.drawImage(buffer);
 		//this.t2.drawImage(buffer);
+        //drawCamera(world,g2,t1);
+        //drawCamera(world,g2,t2);
+        int offsetY = GameConstants.WORLD_HEIGHT - (GameConstants.GAME_SCREEN_HEIGHT/2);
+        int offsetX = GameConstants.WORLD_WIDTH - (GameConstants.GAME_SCREEN_WIDTH/4);
+
 		BufferedImage leftHalf = world.getSubimage(t1.getSplitX(),
                 t1.getSplitY(),
                 GameConstants.GAME_SCREEN_WIDTH/2,
                 GameConstants.GAME_SCREEN_HEIGHT);
-		System.out.println("tank 1:\nx: "+t1.getSplitX()+"\ty: "+t1.getSplitY());
-		System.out.println("tank 2:\nx: "+t2.getSplitX()+"\ty: "+t2.getSplitY());
+		//System.out.println("tank 1:\nx: "+t1.getSplitX()+"\ty: "+t1.getSplitY());
+		//System.out.println("tank 2:\nx: "+t2.getSplitX()+"\ty: "+t2.getSplitY());
 		//x = tank.getX(),y=tank.getY()
         //do not follow this exactly. was from video. will need something like this
 		BufferedImage rightHalf = world.getSubimage(t2.getSplitX(),t2.getSplitY(),GameConstants.GAME_SCREEN_WIDTH/2,GameConstants.GAME_SCREEN_HEIGHT);
 		BufferedImage miniMap = world.getSubimage(0,0,GameConstants.WORLD_WIDTH,GameConstants.WORLD_WIDTH);
 		g2.drawImage(leftHalf,0,0,null);
-		g2.drawImage(rightHalf,GameConstants.GAME_SCREEN_WIDTH/2+4,0,null);
+		g2.drawImage(rightHalf,GameConstants.GAME_SCREEN_WIDTH/2+3,0,null);
 		g2.scale(.15,.15);
 		//find place to put minimap
-		g2.drawImage(miniMap,2500,0,null);
+		g2.drawImage(miniMap,GameConstants.GAME_SCREEN_WIDTH/2,0,null);
 		//g2.scale();
         //g2.drawImage(world,0,0,null);
+    }
+    void drawCamera(BufferedImage world,Graphics2D g2d,Tank tank){
+        int numX,numY,marginX = 0,marginY = 0;
+        int offsetY = GameConstants.WORLD_HEIGHT - (GameConstants.GAME_SCREEN_HEIGHT/2);
+        int offsetX = GameConstants.WORLD_WIDTH - (GameConstants.GAME_SCREEN_WIDTH/4);
+
+        if(tank.getX() - GameConstants.GAME_SCREEN_WIDTH/4 < 0){
+            numX = 0;
+        }else{
+            numX = tank.getX() - GameConstants.GAME_SCREEN_WIDTH/4;
+        }
+
+        if(tank.getY() - GameConstants.GAME_SCREEN_HEIGHT/2 < 0){
+            numY = 0;
+        }else{
+            numY = tank.getY() - GameConstants.GAME_SCREEN_HEIGHT/2;
+        }
+        int clampX = Math.min(GameConstants.GAME_SCREEN_WIDTH,numX);
+        int clampY = Math.min(GameConstants.GAME_SCREEN_HEIGHT,numY);
+        if(numX < 0 ){
+            marginX-=numX;
+        }else if(numX > GameConstants.GAME_SCREEN_WIDTH){
+            marginX = numX;
+        }
+        int finalX = Math.min(GameConstants.WORLD_WIDTH - clampX,
+                Math.max(numX,GameConstants.GAME_SCREEN_WIDTH-marginX));
+        if(numY < 0){
+            marginY -= numY;
+        }else if(numY > GameConstants.WORLD_HEIGHT){
+            marginY = numY;
+        }
+        int finalY = Math.min(GameConstants.WORLD_HEIGHT - clampY,Math.max(numY,GameConstants.GAME_SCREEN_HEIGHT-marginY));
+        BufferedImage cameraView = world.getSubimage(clampX,clampY,finalX,finalY);
+        g2d.drawImage(cameraView,GameConstants.GAME_SCREEN_WIDTH/2 + marginX,GameConstants.GAME_SCREEN_HEIGHT/2+marginY,null);
     }
 
 }

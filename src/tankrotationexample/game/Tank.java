@@ -61,22 +61,40 @@ public class Tank extends GameObject{
         return this.y;
     }
     public int getSplitY(){
-        int number;
+        int number,marginY=0,returnY;
         if(y <= GameConstants.GAME_SCREEN_HEIGHT/2){
             number = 0;
         }else{
-            number = y - (GameConstants.GAME_SCREEN_HEIGHT/2);
+            number = Math.min(y - (GameConstants.GAME_SCREEN_HEIGHT/2),1026);
         }
         return number;
+        /*
+        number = y - GameConstants.GAME_SCREEN_HEIGHT/2;
+        if(number < 0){
+            marginY= marginY- number;
+        }else if(number > GameConstants.GAME_SCREEN_HEIGHT){
+            marginY = number;
+        }
+        returnY = Math.min((GameConstants.WORLD_HEIGHT- number),Math.max(number,GameConstants.GAME_SCREEN_HEIGHT - marginY));
+        return returnY;*/
     }
     public int getSplitX(){
-        int num;
+        int num,marginX = 0,returnX;
         if(x <= GameConstants.GAME_SCREEN_WIDTH/4){
             num = 0;
         }else{
-            num = x - (GameConstants.GAME_SCREEN_WIDTH/4);
+            num = Math.min(x - (GameConstants.GAME_SCREEN_WIDTH / 4), 1350);
         }
         return num;
+        /*
+        num = x - GameConstants.GAME_SCREEN_WIDTH/4;
+        if(num < 0){
+            marginX = marginX - num;
+        }else if(num > GameConstants.GAME_SCREEN_WIDTH){
+            marginX = num;
+        }
+        returnX = Math.min(GameConstants.WORLD_WIDTH-num,Math.max(num,GameConstants.GAME_SCREEN_WIDTH- marginX));
+        return returnX;*/
     }
     void toggleShootPressed(){
         this.ShootPressed = true;

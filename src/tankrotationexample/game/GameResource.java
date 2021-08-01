@@ -17,6 +17,7 @@ public class GameResource {
             GameResource.resources.put("tankTwo",read(Objects.requireNonNull(TRE.class.getClassLoader().getResource("tank1.png"))));
             GameResource.resources.put("breakableWall",read(Objects.requireNonNull(TRE.class.getClassLoader().getResource("wall2.gif"))));
             GameResource.resources.put("unbreakableWall",read(Objects.requireNonNull(TRE.class.getClassLoader().getResource("wall1.gif"))));
+            GameResource.resources.put("bullet",read(Objects.requireNonNull(TRE.class.getClassLoader().getResource("shell.gif"))));
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(-5);
