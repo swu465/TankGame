@@ -23,22 +23,7 @@ public class Bullet extends GameObject{
         vy = (int) Math.round(R * Math.sin(Math.toRadians(angle)));
         x += vx;
         y += vy;
-        checkBorder();
         this.hitBox.setLocation(x,y);
-	}
-	public void checkBorder(){
-		if (x < 30) {
-            x = 30;
-        }
-        if (x >= GameConstants.WORLD_WIDTH - 88) {
-            x = GameConstants.WORLD_WIDTH - 88;
-        }
-        if (y < 40) {
-            y = 40;
-        }
-        if (y >= GameConstants.WORLD_HEIGHT - 80) {
-            y = GameConstants.WORLD_HEIGHT - 80;
-        }
 	}
 	@Override
 	public void update(){

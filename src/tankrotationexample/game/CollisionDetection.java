@@ -35,28 +35,35 @@ public class CollisionDetection {
                 Bullet b;
                 //gethitbox isn't working. idk why.
                 //System.out.println("bullet checking");
-                for(int x = 0; x < t1.ammoDrumSize(); x++){
-                        b= t1.ammoDrumGetBullet(x);
-                        if(b.hitBox.intersects(t2.getHitBox())){
-                                t2.damaged(b);
-                                t1.ammoDrumRemoveBullet(x);
-                        }else if(gameObjects.get(x) instanceof Wall targetWall){
-                                //System.out.println(targetWall.getHitBox().intersects(b.getHitBox()));
-                                //System.out.println(b.hitBox.intersects(targetWall.getHitBox()));
-                                //System.out.println(targetWall.getHP());
-                                if(targetWall.getHP() == 9){
-                                        //System.out.println("godwall");
-                                }else if(targetWall.getHP() == 2){
-                                        System.out.println("a");
-                                        TRE.damageWall(x);
-                                        targetWall.damaged();
-                                }
-                                if(targetWall.getHP() == 0){
-                                        TRE.removeWall(x);
+                try{
+                        for(int x = 0; x < t1.ammoDrumSize(); x++){
+                                for(int y = 0; y < gameObjects.size(); y++){
+                                        b= t1.ammoDrumGetBullet(x);
+                                        if(b.hitBox.intersects(t2.getHitBox())){
+                                                t2.damaged(b);
+                                                t1.ammoDrumRemoveBullet(x);
+                                        }else if(gameObjects.get(y) instanceof UnbreakableWall godWall&&
+                                                ( godWall.getHitBox().intersects(b.getHitBox()) ||
+                                                        b.getHitBox().intersects(godWall.getHitBox()) ) ){
+                                                t1.ammoDrumRemoveBullet(x);
+                                        }else if(gameObjects.get(y) instanceof BreakableWall targetWall &&
+                                                ( targetWall.getHitBox().intersects(b.getHitBox()) ||
+                                                        b.getHitBox().intersects(targetWall.getHitBox()) ) ){
+                                                System.out.println("i hit a breakble wall");
+                                                t1.ammoDrumRemoveBullet(x);
+                                                TRE.damageWall(y);
+                                                if(targetWall.getHP() == 0){
+                                                        TRE.removeWall(y);
+                                                }
+                                        }
                                 }
                         }
+                }catch(Exception e){
+                        System.out.println(e);
                 }
+
         }
+
         public static void checkBulletsTwo(Tank t1, Tank t2,ArrayList<GameObject> gameObjects){
                 Bullet b;
                 //walls problem. bullets still work with new gethitbox
@@ -71,24 +78,25 @@ public class CollisionDetection {
                                         if(b.getHitBox().intersects(t1.getHitBox())){
                                                 t1.damaged(b);
                                                 t2.ammoDrumRemoveBullet(x);
-                                        }else if(gameObjects.get(y) instanceof Wall targetWall){
-                                                if( b.getHitBox().intersects(targetWall.getHitBox()) ||
-                                                        targetWall.getHitBox().intersects(b.getHitBox()) &&
-                                                                targetWall.getHP() == 9){
-                                                        //System.out.println("found wall");
-                                                        t2.ammoDrumRemoveBullet(x);
-                                                }else if(b.getHitBox().intersects(targetWall.getHitBox()) &&
-                                                                targetWall.getHP() == 2){
-                                                        TRE.damageWall(y);
-                                                        targetWall.damaged();
+                                        }else if(gameObjects.get(y) instanceof UnbreakableWall godWall&&
+                                                ( godWall.getHitBox().intersects(b.getHitBox()) ||
+                                                        b.getHitBox().intersects(godWall.getHitBox()) ) ){
+                                                t2.ammoDrumRemoveBullet(x);
 
+                                        }else if(gameObjects.get(y) instanceof BreakableWall targetWall &&
+                                                ( targetWall.getHitBox().intersects(b.getHitBox()) ||
+                                                   b.getHitBox().intersects(targetWall.getHitBox()) ) ){
+                                                //System.out.println("i hit a breakble wall");
+                                                t2.ammoDrumRemoveBullet(x);
+                                                TRE.damageWall(y);
+                                                if(targetWall.getHP() == 0){
+                                                        TRE.removeWall(y);
                                                 }
                                         }
                                 }
-
                         }
                 }catch(Exception e){
-                        System.out.println(e+"out of bullets?");
+                        //System.out.println(e+"out of bullets?");
                 }
 
         }

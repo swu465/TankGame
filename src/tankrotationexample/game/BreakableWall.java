@@ -27,7 +27,9 @@ public class BreakableWall extends Wall{
 
 	@Override
 	public void update() {
-		//draw image?
+		if(state == 0){
+			hitBox.setBounds(0,0,0,0);
+		}
 	}
 
 	@Override
