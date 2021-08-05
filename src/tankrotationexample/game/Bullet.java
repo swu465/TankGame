@@ -44,6 +44,12 @@ public class Bullet extends GameObject{
 	public void update(){
 		moveForwards();
 	}
+
+	@Override
+	public Rectangle getHitBox() {
+		return this.hitBox;
+	}
+
 	@Override
 	public void drawImage(Graphics g){
 		AffineTransform rotation = AffineTransform.getTranslateInstance(x,y);

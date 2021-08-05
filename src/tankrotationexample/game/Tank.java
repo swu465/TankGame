@@ -16,12 +16,13 @@ import java.util.ArrayList;
 public class Tank extends GameObject{
 
 
-    private int x;
-    private int y;
+    private int x,prevX;
+    private int y,prevY;
     private int vx;
     private int vy;
     private float angle;
 	private ArrayList<Bullet> ammoDrum;
+	private boolean colliding;
 
     private final int R = 2;
     private final float ROTATIONSPEED = 3.0f;
@@ -46,10 +47,11 @@ public class Tank extends GameObject{
         this.angle = angle;
         this.hitBox = new Rectangle(x,y,this.img.getWidth(), this.img.getHeight());
 		this.ammoDrum = new ArrayList<>();
+		colliding = false;
 
     }
     public Rectangle getHitBox(){
-        return hitBox.getBounds();
+        return hitBox;
     }
     void setX(int x){ this.x = x; }
 
@@ -65,7 +67,7 @@ public class Tank extends GameObject{
         if(y <= GameConstants.GAME_SCREEN_HEIGHT/2){
             number = 0;
         }else{
-            number = Math.min(y - (GameConstants.GAME_SCREEN_HEIGHT/2),1026);
+            number = Math.min(y - (GameConstants.GAME_SCREEN_HEIGHT/2),1050);
         }
         return number;
         /*
@@ -83,7 +85,7 @@ public class Tank extends GameObject{
         if(x <= GameConstants.GAME_SCREEN_WIDTH/4){
             num = 0;
         }else{
-            num = Math.min(x - (GameConstants.GAME_SCREEN_WIDTH / 4), 1350);
+            num = Math.min(x - (GameConstants.GAME_SCREEN_WIDTH / 4), 1365);
         }
         return num;
         /*
@@ -95,6 +97,18 @@ public class Tank extends GameObject{
         }
         returnX = Math.min(GameConstants.WORLD_WIDTH-num,Math.max(num,GameConstants.GAME_SCREEN_WIDTH- marginX));
         return returnX;*/
+    }
+    public int ammoDrumSize(){
+        return ammoDrum.size();
+    }
+    public Bullet ammoDrumGetBullet(int x){
+        return ammoDrum.get(x);
+    }
+    public void ammoDrumRemoveBullet(int index){
+        ammoDrum.remove(index);
+    }
+    public void damaged(){
+        System.out.println("ow");
     }
     void toggleShootPressed(){
         this.ShootPressed = true;
@@ -171,29 +185,34 @@ public void update() {
     }
 
     private void moveBackwards() {
+        prevX = x;
+        prevY = y;
         vx = (int) Math.round(R * Math.cos(Math.toRadians(angle)));
         vy = (int) Math.round(R * Math.sin(Math.toRadians(angle)));
         x -= vx;
         y -= vy;
         checkBorder();
         this.hitBox.setLocation(x,y);
+        //prevX = x;
+        //prevY = y;
     }
 
     private void moveForwards() {
+        prevX = x;
+        prevY = y;
         vx = (int) Math.round(R * Math.cos(Math.toRadians(angle)));
         vy = (int) Math.round(R * Math.sin(Math.toRadians(angle)));
         x += vx;
         y += vy;
         checkBorder();
         this.hitBox.setLocation(x,y);
+        //prevX = x;
+        //prevY = y;
     }
 
 
 
 //write the same function, but for keeping the split screen on the screen.
-    void checkCollision(){
-
-    }
     private void checkBorder() {
         if (x < 30) {
             x = 30;
@@ -235,9 +254,7 @@ public void update() {
 
 
     public void collisionHappened() {
-        this.unToggleDownPressed();
-        this.unToggleLeftPressed();
-        this.unToggleRightPressed();
-        this.unToggleUpPressed();
+        this.x = prevX-1;
+        this.y = prevY-1;
     }
 }
