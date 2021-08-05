@@ -7,4 +7,6 @@ public abstract class Wall extends GameObject{
     public void update(){
 
     }
+    public abstract int getHP();
+    public abstract void damaged();
 }

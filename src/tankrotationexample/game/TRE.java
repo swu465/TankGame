@@ -34,17 +34,10 @@ public class TRE extends JPanel implements Runnable {
     private Launcher lf;
     private long tick = 0;
     private static ArrayList<GameObject> gameObjects;
-    int[] wallHP;
 	static long frameCount = 0;
 
     public TRE(Launcher lf){
         this.lf = lf;
-    }
-
-    public static void damageWall(int index) {
-        BreakableWall wall= (BreakableWall) gameObjects.get(index);
-        wall.damaged();
-        gameObjects.add(index,wall);
     }
 
     @Override
@@ -63,7 +56,6 @@ public class TRE extends JPanel implements Runnable {
                 CollisionDetection.checkBulletsOne(t1,t2,gameObjects);
                 CollisionDetection.checkBulletsTwo(t1,t2,gameObjects);
                 CollisionDetection.checkPlayers(t1,t2,gameObjects);
-               CollisionDetection.checkPlayers(t2,t1,gameObjects);
 
 				/*
                  * simulate an end game event
@@ -84,6 +76,7 @@ public class TRE extends JPanel implements Runnable {
      */
     public void resetGame(){
         this.tick = 0;
+        frameCount = 0;
         this.t1.setX(300);
         this.t1.setY(300);
 		this.t2.setX(500);
@@ -111,7 +104,7 @@ public class TRE extends JPanel implements Runnable {
              * note class loaders read files from the out folder (build folder in Netbeans) and not the
              * current working directory.
              */
-            InputStreamReader isr = new InputStreamReader(TRE.class.getClassLoader().getResourceAsStream("map2.txt"));
+            InputStreamReader isr = new InputStreamReader(TRE.class.getClassLoader().getResourceAsStream("map3.txt"));
             BufferedReader mapReader = new BufferedReader(isr);
             //0 = nothing
             //2 = breakable wall
@@ -134,13 +127,13 @@ public class TRE extends JPanel implements Runnable {
                     switch (mapInfo[curCol]){
                         case "2":
                             BreakableWall brWall = new BreakableWall(curCol*30,curRow*30,GameResource.get("breakableWall"));
-                            System.out.println("Breakable wall");
-                            this.gameObjects.add(brWall);
+                            //System.out.println("Breakable wall");
+                            TRE.gameObjects.add(brWall);
                             break;
                         case "3":
                         case "9":
                             UnbreakableWall ubrWall = new UnbreakableWall(curCol*30,curRow*30,GameResource.get("unbreakableWall"));
-                            this.gameObjects.add(ubrWall);
+                            TRE.gameObjects.add(ubrWall);
                             //System.out.println("unbreakable wall");
                             break;
                     }
@@ -151,12 +144,13 @@ public class TRE extends JPanel implements Runnable {
             ex.printStackTrace();
         }
         //ask prof about Tank t1 = ... here vs private member
+        //maybe just add the tank to the arraylist
         t1 = new Tank(300, 300, 0, 0, 0, GameResource.get("tankOne"));
         t2 = new Tank(1000,800,0,0,180,GameResource.get("tankTwo"));
         TankControl tc1 = new TankControl(t1, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SPACE);
         TankControl tc2 = new TankControl(t2, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
-		this.gameObjects.add(t1);
-		this.gameObjects.add(t2);
+		TRE.gameObjects.add(t1);
+		TRE.gameObjects.add(t2);
         this.setBackground(Color.BLACK);
         this.lf.getJf().addKeyListener(tc1);
         this.lf.getJf().addKeyListener(tc2);
@@ -168,13 +162,9 @@ public class TRE extends JPanel implements Runnable {
         Graphics2D buffer = world.createGraphics();
         buffer.setColor(Color.BLACK);
         buffer.fillRect(0,0,GameConstants.WORLD_WIDTH,GameConstants.WORLD_HEIGHT);
-        this.gameObjects.forEach(wall->wall.drawImage(buffer));
+        TRE.gameObjects.forEach(wall->wall.drawImage(buffer));
         //this.t1.drawImage(buffer);
 		//this.t2.drawImage(buffer);
-        //drawCamera(world,g2,t1);
-        //drawCamera(world,g2,t2);
-        int offsetY = GameConstants.WORLD_HEIGHT - (GameConstants.GAME_SCREEN_HEIGHT/2);
-        int offsetX = GameConstants.WORLD_WIDTH - (GameConstants.GAME_SCREEN_WIDTH/4);
 
 		BufferedImage leftHalf = world.getSubimage(t1.getSplitX(),
                 t1.getSplitY(),
@@ -195,6 +185,11 @@ public class TRE extends JPanel implements Runnable {
         //g2.drawImage(world,0,0,null);
     }
     public static void removeWall(int index){
-        gameObjects.remove(index);
+        TRE.gameObjects.remove(index);
+    }
+    public static void damageWall(int index) {
+        BreakableWall wall= (BreakableWall) TRE.gameObjects.get(index);
+        wall.damaged();
+        TRE.gameObjects.add(index,wall);
     }
 }

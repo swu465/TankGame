@@ -18,7 +18,7 @@ public class PowerUp extends GameObject{
     @Override
     public void drawImage(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        g2.drawImage(this.pwrImage,0,0,null);
+        g2.drawImage(this.pwrImage,x,y,null);
     }
 
     @Override

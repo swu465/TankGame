@@ -30,6 +30,7 @@ public class Tank extends GameObject{
 
     private Rectangle hitBox;
     private BufferedImage img;
+    private BufferedImage explosionImg;
     private boolean UpPressed;
     private boolean DownPressed;
     private boolean RightPressed;
@@ -106,8 +107,14 @@ public class Tank extends GameObject{
     }
     public void ammoDrumRemoveBullet(int index){
         ammoDrum.remove(index);
+        System.out.println(ammoDrumSize());
     }
-    public void damaged(){
+    public void damaged(GameObject item){
+        if(item instanceof Bullet){
+            //do 1 damage
+        }else if(item instanceof rocketPowerUp){
+            //do 2 damage
+        }
         System.out.println("ow");
     }
     void toggleShootPressed(){
@@ -193,8 +200,6 @@ public void update() {
         y -= vy;
         checkBorder();
         this.hitBox.setLocation(x,y);
-        //prevX = x;
-        //prevY = y;
     }
 
     private void moveForwards() {
@@ -206,8 +211,6 @@ public void update() {
         y += vy;
         checkBorder();
         this.hitBox.setLocation(x,y);
-        //prevX = x;
-        //prevY = y;
     }
 
 
@@ -254,7 +257,7 @@ public void update() {
 
 
     public void collisionHappened() {
-        this.x = prevX-1;
-        this.y = prevY-1;
+        this.x = prevX;
+        this.y = prevY;
     }
 }

@@ -47,7 +47,7 @@ public class Bullet extends GameObject{
 
 	@Override
 	public Rectangle getHitBox() {
-		return this.hitBox;
+		return hitBox.getBounds();
 	}
 
 	@Override

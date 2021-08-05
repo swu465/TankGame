@@ -22,10 +22,6 @@ public class GameResource {
             e.printStackTrace();
             System.exit(-5);
         }
-        /*t1img = read(Objects.requireNonNull(TRE.class.getClassLoader().getResource("tank1.png")))
-        t2img = read(Objects.requireNonNull(TRE.class.getClassLoader().getResource("tank2.png")))
-        godWall = read(Objects.requireNonNull(TRE.class.getClassLoader().getResource("unbreakablewall.png")));
-        normalWall = read(Objects.requireNonNull(TRE.class.getClassLoader().getResource("breakablewall.png")));*/
 
     }
     public static BufferedImage get(String name){
