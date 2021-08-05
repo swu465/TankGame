@@ -27,14 +27,15 @@ public class UnbreakableWall extends Wall{
 	public Rectangle getHitBox() {
 		return this.hitBox.getBounds();
 	}
-	@Override
-	public void update() {
 
+	@Override
+	public int getState() {
+		return state;
 	}
 
 	@Override
-	public int getHP() {
-		return state;
+	public void update() {
+
 	}
 
 	@Override

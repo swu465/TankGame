@@ -9,13 +9,14 @@ public class Bullet extends GameObject{
 	int R = 7;
 	int x,y,vx,vy,angle,damage;
 	public BufferedImage bulletImage;
-	Rectangle hitBox;
+	private Rectangle hitBox;
 
 	public Bullet(int x, int y, int angle, BufferedImage bullet){
 		this.x = x;
 		this.y = y;
 		this.angle = angle;
 		this.bulletImage = bullet;
+		damage = 1;
 		this.hitBox = new Rectangle(x,y,this.bulletImage.getWidth(),this.bulletImage.getHeight());
 	}
 	public void moveForwards(){
@@ -33,6 +34,11 @@ public class Bullet extends GameObject{
 	@Override
 	public Rectangle getHitBox() {
 		return hitBox.getBounds();
+	}
+
+	@Override
+	public int getState() {
+		return 0;
 	}
 
 	@Override

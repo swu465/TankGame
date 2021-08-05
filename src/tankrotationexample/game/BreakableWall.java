@@ -36,10 +36,12 @@ public class BreakableWall extends Wall{
 	public Rectangle getHitBox() {
 		return this.hitBox.getBounds();
 	}
+
 	@Override
-	public int getHP(){
+	public int getState() {
 		return state;
 	}
+
 	@Override
 	public void damaged(){
 		state--;

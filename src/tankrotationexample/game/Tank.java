@@ -4,6 +4,7 @@ package tankrotationexample.game;
 
 import tankrotationexample.GameConstants;
 
+import javax.security.sasl.RealmChoiceCallback;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -21,22 +22,23 @@ public class Tank extends GameObject{
     private int vx;
     private int vy;
     private float angle;
-	private ArrayList<Bullet> ammoDrum;
-	private boolean colliding;
+	private ArrayList<GameObject> ammoDrum;
+	private int HP = 4;
+	private boolean shootRockets;
+	private int rocketCount;
 
     private final int R = 2;
     private final float ROTATIONSPEED = 3.0f;
 
 
     private Rectangle hitBox;
-    private BufferedImage img;
+    private BufferedImage img,healthBar;
     private BufferedImage explosionImg;
     private boolean UpPressed;
     private boolean DownPressed;
     private boolean RightPressed;
     private boolean LeftPressed;
     private boolean ShootPressed;
-	//static long frameCount = 0;
 
 
     Tank(int x, int y, int vx, int vy, int angle, BufferedImage img) {
@@ -48,12 +50,19 @@ public class Tank extends GameObject{
         this.angle = angle;
         this.hitBox = new Rectangle(x,y,this.img.getWidth(), this.img.getHeight());
 		this.ammoDrum = new ArrayList<>();
-		colliding = false;
-
+		shootRockets = false;
+		rocketCount = 5;
+		this.healthBar = GameResource.get("fullHP");
     }
     public Rectangle getHitBox(){
         return hitBox;
     }
+
+    @Override
+    public int getState() {
+        return HP;
+    }
+
     void setX(int x){ this.x = x; }
 
     void setY(int y) { this. y = y;}
@@ -71,15 +80,6 @@ public class Tank extends GameObject{
             number = Math.min(y - (GameConstants.GAME_SCREEN_HEIGHT/2),1050);
         }
         return number;
-        /*
-        number = y - GameConstants.GAME_SCREEN_HEIGHT/2;
-        if(number < 0){
-            marginY= marginY- number;
-        }else if(number > GameConstants.GAME_SCREEN_HEIGHT){
-            marginY = number;
-        }
-        returnY = Math.min((GameConstants.WORLD_HEIGHT- number),Math.max(number,GameConstants.GAME_SCREEN_HEIGHT - marginY));
-        return returnY;*/
     }
     public int getSplitX(){
         int num,marginX = 0,returnX;
@@ -89,20 +89,11 @@ public class Tank extends GameObject{
             num = Math.min(x - (GameConstants.GAME_SCREEN_WIDTH / 4), 1365);
         }
         return num;
-        /*
-        num = x - GameConstants.GAME_SCREEN_WIDTH/4;
-        if(num < 0){
-            marginX = marginX - num;
-        }else if(num > GameConstants.GAME_SCREEN_WIDTH){
-            marginX = num;
-        }
-        returnX = Math.min(GameConstants.WORLD_WIDTH-num,Math.max(num,GameConstants.GAME_SCREEN_WIDTH- marginX));
-        return returnX;*/
     }
     public int ammoDrumSize(){
         return ammoDrum.size();
     }
-    public Bullet ammoDrumGetBullet(int x){
+    public GameObject ammoDrumGetBullet(int x){
         return ammoDrum.get(x);
     }
     public void ammoDrumRemoveBullet(int index){
@@ -111,8 +102,11 @@ public class Tank extends GameObject{
     }
     public void damaged(GameObject item){
         if(item instanceof Bullet){
+            HP--;
             //do 1 damage
-        }else if(item instanceof rocketPowerUp){
+        }else if(item instanceof Rocket){
+            HP--;
+            HP--;
             //do 2 damage
         }
         System.out.println("ow");
@@ -156,6 +150,23 @@ public class Tank extends GameObject{
     }
 @Override
 public void update() {
+        switch (HP){
+            case 0:
+                img = GameResource.get("explosion");
+                break;
+            case 1:
+                healthBar = GameResource.get("threeHit");
+                break;
+            case 2:
+                healthBar = GameResource.get("twoHit");
+                break;
+            case 3:
+                healthBar = GameResource.get("oneHit");
+                break;
+            case 4:
+                healthBar = GameResource.get("fullHP");
+                break;
+        }
         if (this.UpPressed) {
             this.moveForwards();
         }
@@ -169,10 +180,14 @@ public void update() {
         if (this.RightPressed) {
             this.rotateRight();
         }
-        if(this.ShootPressed && TRE.frameCount % 30 == 0){
+        if(this.ShootPressed && TRE.frameCount % 30 == 0 && !shootRockets){
             System.out.println("Pew Pew");
 			Bullet b = new Bullet(x,y,(int)angle,GameResource.get("bullet"));
 			this.ammoDrum.add(b);
+        }else if(this.ShootPressed && TRE.frameCount % 30 == 0 && rocketCount > 0){
+            Rocket r = new Rocket(x,y,(int)angle,GameResource.get("rocket"));
+            this.ammoDrum.add(r);
+            rocketCount--;
         }
 		this.ammoDrum.forEach(bullet->bullet.update());
 		//to prevent bugs, do updates first and then do reads
@@ -244,20 +259,39 @@ public void update() {
     public void drawImage(Graphics g) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
-
+        //rotation.rotate(Math.toRadians(angle),this.healthBar.getWidth()/2.0,this.healthBar.getHeight()/2.0);
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(this.img, rotation, null);
-        //fix this later
+        g2d.drawImage(this.healthBar,x,y+50,null);
+        //fix this later?
 		this.ammoDrum.forEach(bullet->bullet.drawImage(g));
 		//????
 		g2d.setColor(Color.RED);
+		//hitbox bounds?
 		//g2d.rotate(Math.toRadians(angle),bounds.x+bounds.width/2,bounds.y+bounds.height/2);
 		g2d.drawRect(x,y,this.img.getWidth(),this.img.getHeight());
     }
 
-
     public void collisionHappened() {
         this.x = prevX;
         this.y = prevY;
+    }
+    public void healHP(){
+        HP =4;
+    }
+    public void rocketLauncher(){
+        shootRockets = true;
+    }
+    public void speedUp(){
+
+    }
+    public void reset(){
+        hitBox.setBounds(x,y,this.img.getWidth(),this.img.getHeight());
+        HP = 4;
+        this.unToggleShootPressed();
+        this.unToggleUpPressed();
+        this.unToggleRightPressed();
+        this.unToggleLeftPressed();
+        this.unToggleDownPressed();
     }
 }

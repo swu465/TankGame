@@ -32,14 +32,14 @@ public class CollisionDetection {
 
         }
         public static void checkBulletsOne(Tank t1, Tank t2, ArrayList<GameObject> gameObjects){
-                Bullet b;
+                GameObject b;
                 //gethitbox isn't working. idk why.
                 //System.out.println("bullet checking");
                 try{
                         for(int x = 0; x < t1.ammoDrumSize(); x++){
                                 for(int y = 0; y < gameObjects.size(); y++){
                                         b= t1.ammoDrumGetBullet(x);
-                                        if(b.hitBox.intersects(t2.getHitBox())){
+                                        if(b.getHitBox().intersects(t2.getHitBox())){
                                                 t2.damaged(b);
                                                 t1.ammoDrumRemoveBullet(x);
                                         }else if(gameObjects.get(y) instanceof UnbreakableWall godWall&&
@@ -49,11 +49,16 @@ public class CollisionDetection {
                                         }else if(gameObjects.get(y) instanceof BreakableWall targetWall &&
                                                 ( targetWall.getHitBox().intersects(b.getHitBox()) ||
                                                         b.getHitBox().intersects(targetWall.getHitBox()) ) ){
-                                                System.out.println("i hit a breakble wall");
-                                                t1.ammoDrumRemoveBullet(x);
-                                                TRE.damageWall(y);
-                                                if(targetWall.getHP() == 0){
+                                                //System.out.println("i hit a breakble wall");
+                                                if(b instanceof Rocket){
                                                         TRE.removeWall(y);
+                                                        t1.ammoDrumRemoveBullet(x);
+                                                }else if(b instanceof Bullet){
+                                                        t1.ammoDrumRemoveBullet(x);
+                                                        TRE.damageWall(y);
+                                                        if(targetWall.getState() == 0){
+                                                                TRE.removeWall(y);
+                                                        }
                                                 }
                                         }
                                 }
@@ -65,8 +70,7 @@ public class CollisionDetection {
         }
 
         public static void checkBulletsTwo(Tank t1, Tank t2,ArrayList<GameObject> gameObjects){
-                Bullet b;
-                //walls problem. bullets still work with new gethitbox
+                GameObject b;
                 //System.out.println("bullet checking");
                 try{
                         for(int x = 0; x < t2.ammoDrumSize(); x++){
@@ -74,6 +78,7 @@ public class CollisionDetection {
                                         //nested for loop. outer loop for the ammodrum
                                         //inner for loop for the size of the arraylist
                                         //System.out.println(gameObjects.size());
+                                        //check for bullet or rocket. then assign
                                         b= t2.ammoDrumGetBullet(x);
                                         if(b.getHitBox().intersects(t1.getHitBox())){
                                                 t1.damaged(b);
@@ -87,10 +92,15 @@ public class CollisionDetection {
                                                 ( targetWall.getHitBox().intersects(b.getHitBox()) ||
                                                    b.getHitBox().intersects(targetWall.getHitBox()) ) ){
                                                 //System.out.println("i hit a breakble wall");
-                                                t2.ammoDrumRemoveBullet(x);
-                                                TRE.damageWall(y);
-                                                if(targetWall.getHP() == 0){
+                                                if(b instanceof Rocket){
+                                                        t2.ammoDrumRemoveBullet(x);
                                                         TRE.removeWall(y);
+                                                }else if(b instanceof Bullet){
+                                                        t2.ammoDrumRemoveBullet(x);
+                                                        TRE.damageWall(y);
+                                                        if(targetWall.getState() == 0){
+                                                                TRE.removeWall(y);
+                                                        }
                                                 }
                                         }
                                 }

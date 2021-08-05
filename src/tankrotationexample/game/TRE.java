@@ -18,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+
 import java.util.Objects;
 
 
@@ -47,6 +48,7 @@ public class TRE extends JPanel implements Runnable {
            while (true) {
                 this.tick++;
 				gameObjects.forEach(gameObjects -> gameObjects.update());
+
                 //this.t1.update(); // update tank
 				//this.t2.update();
                 this.repaint();   // redraw game
@@ -56,6 +58,11 @@ public class TRE extends JPanel implements Runnable {
                 CollisionDetection.checkBulletsOne(t1,t2,gameObjects);
                 CollisionDetection.checkBulletsTwo(t1,t2,gameObjects);
                 CollisionDetection.checkPlayers(t1,t2,gameObjects);
+               if(t1.getState() == 0 || t2.getState() == 0){
+                   this.lf.setFrame("end");
+                   this.resetGame();
+                   return;
+               }
 
 				/*
                  * simulate an end game event
@@ -81,6 +88,8 @@ public class TRE extends JPanel implements Runnable {
         this.t1.setY(300);
 		this.t2.setX(500);
 		this.t2.setY(500);
+		this.t1.reset();
+		this.t2.reset();
 		//need to redo hitboxes? or walls
     }
 
@@ -160,8 +169,11 @@ public class TRE extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         Graphics2D buffer = world.createGraphics();
-        buffer.setColor(Color.BLACK);
-        buffer.fillRect(0,0,GameConstants.WORLD_WIDTH,GameConstants.WORLD_HEIGHT);
+
+        //buffer.setColor(Color.BLACK);
+        buffer.drawImage(GameResource.get("background"),0,0,GameConstants.WORLD_WIDTH,GameConstants.WORLD_HEIGHT,Color.black,null);
+        //buffer.fillRect(0,0,GameConstants.WORLD_WIDTH,GameConstants.WORLD_HEIGHT);
+        //buffer.drawImage(GameResource.get("background"),0,0,null);
         TRE.gameObjects.forEach(wall->wall.drawImage(buffer));
         //this.t1.drawImage(buffer);
 		//this.t2.drawImage(buffer);
