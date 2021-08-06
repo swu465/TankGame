@@ -23,11 +23,11 @@ public class Tank extends GameObject{
     private int vy;
     private float angle;
 	private ArrayList<GameObject> ammoDrum;
-	private int HP = 4;
-	private boolean shootRockets;
+	private int HP = 4,state = 3;
+	private boolean shootRockets,goFast;
 	private int rocketCount;
 
-    private final int R = 2;
+    private int R = 2;
     private final float ROTATIONSPEED = 3.0f;
 
 
@@ -46,21 +46,24 @@ public class Tank extends GameObject{
         this.y = y;
         this.vx = vx;
         this.vy = vy;
+        this.prevX = x;
+        this.prevY = y;
         this.img = img;
         this.angle = angle;
         this.hitBox = new Rectangle(x,y,this.img.getWidth(), this.img.getHeight());
 		this.ammoDrum = new ArrayList<>();
 		shootRockets = false;
-		rocketCount = 5;
+		goFast = false;
+		rocketCount = 0;
 		this.healthBar = GameResource.get("fullHP");
     }
     public Rectangle getHitBox(){
-        return hitBox;
+        return hitBox.getBounds();
     }
 
     @Override
     public int getState() {
-        return HP;
+        return state;
     }
 
     void setX(int x){ this.x = x; }
@@ -100,6 +103,7 @@ public class Tank extends GameObject{
         ammoDrum.remove(index);
         System.out.println(ammoDrumSize());
     }
+
     public void damaged(GameObject item){
         if(item instanceof Bullet){
             HP--;
@@ -152,7 +156,10 @@ public class Tank extends GameObject{
 public void update() {
         switch (HP){
             case 0:
-                img = GameResource.get("explosion");
+                //img = GameResource.get("explosion");
+                state--;
+                //reset hp to 4
+                HP = 4;
                 break;
             case 1:
                 healthBar = GameResource.get("threeHit");
@@ -166,6 +173,10 @@ public void update() {
             case 4:
                 healthBar = GameResource.get("fullHP");
                 break;
+        }
+        if(goFast && TRE.frameCount == 3500){
+            R = 2;
+            goFast = false;
         }
         if (this.UpPressed) {
             this.moveForwards();
@@ -188,6 +199,9 @@ public void update() {
             Rocket r = new Rocket(x,y,(int)angle,GameResource.get("rocket"));
             this.ammoDrum.add(r);
             rocketCount--;
+            if(rocketCount == 0){
+                shootRockets = false;
+            }
         }
 		this.ammoDrum.forEach(bullet->bullet.update());
 		//to prevent bugs, do updates first and then do reads
@@ -263,6 +277,7 @@ public void update() {
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(this.img, rotation, null);
         g2d.drawImage(this.healthBar,x,y+50,null);
+        g2d.drawString(String.valueOf(state),x,y+60);
         //fix this later?
 		this.ammoDrum.forEach(bullet->bullet.drawImage(g));
 		//????
@@ -276,18 +291,22 @@ public void update() {
         this.x = prevX;
         this.y = prevY;
     }
-    public void healHP(){
-        HP =4;
+    public void setPowerUp(PowerUp item){
+        if(item instanceof rocketPowerUp){
+            shootRockets = true;
+            rocketCount = 5;
+        }else if(item instanceof speedPowerUp){
+           R = 4;
+           goFast = true;
+        }else if(item instanceof HPPowerUp){
+            HP = 4;
+        }
     }
-    public void rocketLauncher(){
-        shootRockets = true;
-    }
-    public void speedUp(){
 
-    }
     public void reset(){
         hitBox.setBounds(x,y,this.img.getWidth(),this.img.getHeight());
         HP = 4;
+        state = 3;
         this.unToggleShootPressed();
         this.unToggleUpPressed();
         this.unToggleRightPressed();

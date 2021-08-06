@@ -22,10 +22,20 @@ public class CollisionDetection {
                                 //System.out.println(objList.get(x).getHitBox().getHeight());
                                 if (t1.getHitBox().intersects(objList.get(x).getHitBox()) ||
                                 objList.get(x).getHitBox().intersects(t1.getHitBox())) {
-                                        System.out.println("in a wall");
+                                        //System.out.println("in a wall");
                                         t1.collisionHappened();
                                 }else if(t2.getHitBox().intersects(objList.get(x).getHitBox())){
                                         t2.collisionHappened();
+                                }
+                        }else if(objList.get(x) instanceof PowerUp item){
+                                if(t1.getHitBox().intersects(item.getHitBox())){
+                                        t1.setPowerUp(item);
+                                        item.pickedUp();
+                                        TRE.removeObj(x);
+                                }else if(t2.getHitBox().intersects(item.getHitBox())){
+                                        t2.setPowerUp(item);
+                                        item.pickedUp();
+                                        TRE.removeObj(x);
                                 }
                         }
                 }
@@ -51,13 +61,13 @@ public class CollisionDetection {
                                                         b.getHitBox().intersects(targetWall.getHitBox()) ) ){
                                                 //System.out.println("i hit a breakble wall");
                                                 if(b instanceof Rocket){
-                                                        TRE.removeWall(y);
+                                                        TRE.removeObj(y);
                                                         t1.ammoDrumRemoveBullet(x);
                                                 }else if(b instanceof Bullet){
                                                         t1.ammoDrumRemoveBullet(x);
                                                         TRE.damageWall(y);
                                                         if(targetWall.getState() == 0){
-                                                                TRE.removeWall(y);
+                                                                TRE.removeObj(y);
                                                         }
                                                 }
                                         }
@@ -94,12 +104,12 @@ public class CollisionDetection {
                                                 //System.out.println("i hit a breakble wall");
                                                 if(b instanceof Rocket){
                                                         t2.ammoDrumRemoveBullet(x);
-                                                        TRE.removeWall(y);
+                                                        TRE.removeObj(y);
                                                 }else if(b instanceof Bullet){
                                                         t2.ammoDrumRemoveBullet(x);
                                                         TRE.damageWall(y);
                                                         if(targetWall.getState() == 0){
-                                                                TRE.removeWall(y);
+                                                                TRE.removeObj(y);
                                                         }
                                                 }
                                         }

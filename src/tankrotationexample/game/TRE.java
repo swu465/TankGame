@@ -60,7 +60,6 @@ public class TRE extends JPanel implements Runnable {
                 CollisionDetection.checkPlayers(t1,t2,gameObjects);
                if(t1.getState() == 0 || t2.getState() == 0){
                    this.lf.setFrame("end");
-                   this.resetGame();
                    return;
                }
 
@@ -84,13 +83,10 @@ public class TRE extends JPanel implements Runnable {
     public void resetGame(){
         this.tick = 0;
         frameCount = 0;
-        this.t1.setX(300);
-        this.t1.setY(300);
-		this.t2.setX(500);
-		this.t2.setY(500);
+
 		this.t1.reset();
 		this.t2.reset();
-		//need to redo hitboxes? or walls
+		this.gameInitialize();
     }
 
 
@@ -103,10 +99,6 @@ public class TRE extends JPanel implements Runnable {
                                        GameConstants.WORLD_HEIGHT,
                                        BufferedImage.TYPE_INT_RGB);
 
-        BufferedImage t1img = null;
-        BufferedImage t2img = null;
-        BufferedImage godWall = null;
-        BufferedImage normalWall = null;
         gameObjects = new ArrayList<>();
         try {
             /*
@@ -118,7 +110,7 @@ public class TRE extends JPanel implements Runnable {
             //0 = nothing
             //2 = breakable wall
             // 3 = unbreakable wall
-            //4 = powerups
+            //4-7 = powerups
             //9 = unbreakable calls. not used in collisions.
             String row = mapReader.readLine();
             if(row == null){
@@ -144,6 +136,18 @@ public class TRE extends JPanel implements Runnable {
                             UnbreakableWall ubrWall = new UnbreakableWall(curCol*30,curRow*30,GameResource.get("unbreakableWall"));
                             TRE.gameObjects.add(ubrWall);
                             //System.out.println("unbreakable wall");
+                            break;
+                        case "4":
+                            rocketPowerUp r = new rocketPowerUp(curCol*30,curRow*30,GameResource.get("rocketPwr"));
+                            TRE.gameObjects.add(r);
+                            break;
+                        case "5":
+                            HPPowerUp h = new HPPowerUp(curCol*30,curRow*30,GameResource.get("heal"));
+                            TRE.gameObjects.add(h);
+                            break;
+                        case "6":
+                            speedPowerUp s = new speedPowerUp(curCol*30,curRow*30,GameResource.get("speed"));
+                            TRE.gameObjects.add(s);
                             break;
                     }
                 }
@@ -192,11 +196,11 @@ public class TRE extends JPanel implements Runnable {
 		g2.drawImage(rightHalf,GameConstants.GAME_SCREEN_WIDTH/2+4,0,null);
 		g2.scale(.15,.15);
 		//find place to put minimap
-		g2.drawImage(miniMap,3250,0,null);
+		g2.drawImage(miniMap,3300,0,null);
 		//g2.scale();
         //g2.drawImage(world,0,0,null);
     }
-    public static void removeWall(int index){
+    public static void removeObj(int index){
         TRE.gameObjects.remove(index);
     }
     public static void damageWall(int index) {

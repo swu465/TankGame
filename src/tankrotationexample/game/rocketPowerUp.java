@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.nio.Buffer;
 
-public class rocketPowerUp extends GameObject{
+public class rocketPowerUp extends PowerUp{
     private BufferedImage img;
     int x,y,state = 1;
     private Rectangle hitBox;
