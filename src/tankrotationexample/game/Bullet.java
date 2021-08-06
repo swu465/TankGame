@@ -38,6 +38,7 @@ public class Bullet extends GameObject{
 
 	@Override
 	public int getState() {
+		//does nothingl. should never be called.
 		return 0;
 	}
 

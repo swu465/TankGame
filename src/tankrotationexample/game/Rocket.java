@@ -30,8 +30,8 @@ public class Rocket extends GameObject{
         rotation.rotate(Math.toRadians(angle),this.rocketImage.getWidth()/2.0,this.rocketImage.getHeight());
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(this.rocketImage,rotation,null);
-        g2d.setColor(Color.CYAN);
-        g2d.drawRect(x,y,this.rocketImage.getWidth(),this.rocketImage.getHeight());
+        //g2d.setColor(Color.CYAN);
+        //g2d.drawRect(x,y,this.rocketImage.getWidth(),this.rocketImage.getHeight());
     }
 
     @Override

@@ -104,11 +104,10 @@ public class Tank extends GameObject{
 
     public void damaged(GameObject item){
         if(item instanceof Bullet){
-            HP--;
+            HP-=((Bullet) item).damage;
             //do 1 damage
         }else if(item instanceof Rocket){
-            HP--;
-            HP--;
+            HP-=((Rocket) item).damage;
             //do 2 damage
         }
     }
@@ -151,6 +150,7 @@ public class Tank extends GameObject{
     }
 @Override
 public void update() {
+        //updates HP bar
         switch (HP){
             case 0:
                 //img = GameResource.get("explosion");
@@ -171,6 +171,7 @@ public void update() {
                 healthBar = GameResource.get("fullHP");
                 break;
         }
+        //keeps track of time for how long the speed boost lasts for from TRE.frameCount
         if(goFast && TRE.frameCount == 3500){
             R = 2;
             goFast = false;
@@ -192,6 +193,7 @@ public void update() {
 			Bullet b = new Bullet(x,y,(int)angle,GameResource.get("bullet"));
 			this.ammoDrum.add(b);
         }else if(this.ShootPressed && TRE.frameCount % 30 == 0 && rocketCount > 0){
+            //keeps track of rockets shot and adds them to ammodrum
             Rocket r = new Rocket(x,y,(int)angle,GameResource.get("rocket"));
             this.ammoDrum.add(r);
             rocketCount--;

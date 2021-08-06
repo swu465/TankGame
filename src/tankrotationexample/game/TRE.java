@@ -57,6 +57,7 @@ public class TRE extends JPanel implements Runnable {
                 CollisionDetection.checkBulletsOne(t1,t2,gameObjects);
                 CollisionDetection.checkBulletsTwo(t1,t2,gameObjects);
                 CollisionDetection.checkPlayers(t1,t2,gameObjects);
+                //if one tank is out of lives, the game ends.
                if(t1.getState() == 0 || t2.getState() == 0){
                    this.lf.setFrame("end");
                    return;

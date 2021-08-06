@@ -35,11 +35,9 @@ public class UnbreakableWall extends Wall{
 
 	@Override
 	public void update() {
-
 	}
 
 	@Override
 	public void damaged() {
-
 	}
 }
