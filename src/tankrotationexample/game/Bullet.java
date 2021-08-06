@@ -47,8 +47,8 @@ public class Bullet extends GameObject{
 		rotation.rotate(Math.toRadians(angle),this.bulletImage.getWidth()/2.0,this.bulletImage.getHeight());
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.drawImage(this.bulletImage,rotation,null);
-		g2d.setColor(Color.CYAN);
-		g2d.drawRect(x,y,this.bulletImage.getWidth(),this.bulletImage.getHeight());
+		//g2d.setColor(Color.CYAN);
+		//g2d.drawRect(x,y,this.bulletImage.getWidth(),this.bulletImage.getHeight());
 		
 	}
 }

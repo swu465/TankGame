@@ -20,8 +20,8 @@ public class BreakableWall extends Wall{
 		if(state > 0){
 			Graphics2D g2 = (Graphics2D)g;
 			g2.drawImage(this.wallImage,x,y,null);
-			g2.setColor(Color.blue);
-			g2.drawRect(x,y,this.wallImage.getWidth(),this.wallImage.getHeight());
+			//g2.setColor(Color.blue);
+			//g2.drawRect(x,y,this.wallImage.getWidth(),this.wallImage.getHeight());
 		}
 	}
 

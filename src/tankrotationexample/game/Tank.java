@@ -33,7 +33,6 @@ public class Tank extends GameObject{
 
     private Rectangle hitBox;
     private BufferedImage img,healthBar;
-    private BufferedImage explosionImg;
     private boolean UpPressed;
     private boolean DownPressed;
     private boolean RightPressed;
@@ -101,7 +100,6 @@ public class Tank extends GameObject{
     }
     public void ammoDrumRemoveBullet(int index){
         ammoDrum.remove(index);
-        System.out.println(ammoDrumSize());
     }
 
     public void damaged(GameObject item){
@@ -113,7 +111,6 @@ public class Tank extends GameObject{
             HP--;
             //do 2 damage
         }
-        System.out.println("ow");
     }
     void toggleShootPressed(){
         this.ShootPressed = true;
@@ -192,7 +189,6 @@ public void update() {
             this.rotateRight();
         }
         if(this.ShootPressed && TRE.frameCount % 30 == 0 && !shootRockets){
-            System.out.println("Pew Pew");
 			Bullet b = new Bullet(x,y,(int)angle,GameResource.get("bullet"));
 			this.ammoDrum.add(b);
         }else if(this.ShootPressed && TRE.frameCount % 30 == 0 && rocketCount > 0){
@@ -242,9 +238,6 @@ public void update() {
         this.hitBox.setLocation(x,y);
     }
 
-
-
-//write the same function, but for keeping the split screen on the screen.
     private void checkBorder() {
         if (x < 30) {
             x = 30;
@@ -278,13 +271,11 @@ public void update() {
         g2d.drawImage(this.img, rotation, null);
         g2d.drawImage(this.healthBar,x,y+50,null);
         g2d.drawString(String.valueOf(state),x,y+60);
-        //fix this later?
 		this.ammoDrum.forEach(bullet->bullet.drawImage(g));
-		//????
-		g2d.setColor(Color.RED);
+		//g2d.setColor(Color.RED);
 		//hitbox bounds?
 		//g2d.rotate(Math.toRadians(angle),bounds.x+bounds.width/2,bounds.y+bounds.height/2);
-		g2d.drawRect(x,y,this.img.getWidth(),this.img.getHeight());
+		//g2d.drawRect(x,y,this.img.getWidth(),this.img.getHeight());
     }
 
     public void collisionHappened() {

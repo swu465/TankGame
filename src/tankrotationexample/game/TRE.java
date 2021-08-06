@@ -49,8 +49,7 @@ public class TRE extends JPanel implements Runnable {
                 this.tick++;
 				gameObjects.forEach(gameObjects -> gameObjects.update());
 
-                //this.t1.update(); // update tank
-				//this.t2.update();
+
                 this.repaint();   // redraw game
                 Thread.sleep(1000 / 144); //sleep for a few milliseconds
                 //System.out.println(t1);
@@ -157,9 +156,8 @@ public class TRE extends JPanel implements Runnable {
             ex.printStackTrace();
         }
         //ask prof about Tank t1 = ... here vs private member
-        //maybe just add the tank to the arraylist
-        t1 = new Tank(300, 300, 0, 0, 0, GameResource.get("tankOne"));
-        t2 = new Tank(1000,800,0,0,180,GameResource.get("tankTwo"));
+         t1 = new Tank(300, 300, 0, 0, 0, GameResource.get("tankOne"));
+         t2 = new Tank(1500,1650,0,0,180,GameResource.get("tankTwo"));
         TankControl tc1 = new TankControl(t1, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SPACE);
         TankControl tc2 = new TankControl(t2, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
 		TRE.gameObjects.add(t1);
@@ -173,9 +171,8 @@ public class TRE extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         Graphics2D buffer = world.createGraphics();
-
         //buffer.setColor(Color.BLACK);
-        buffer.drawImage(GameResource.get("background"),0,0,GameConstants.WORLD_WIDTH,GameConstants.WORLD_HEIGHT,Color.black,null);
+        buffer.drawImage(GameResource.get("background"),0,0,GameConstants.WORLD_WIDTH,GameConstants.WORLD_HEIGHT,null);
         //buffer.fillRect(0,0,GameConstants.WORLD_WIDTH,GameConstants.WORLD_HEIGHT);
         //buffer.drawImage(GameResource.get("background"),0,0,null);
         TRE.gameObjects.forEach(wall->wall.drawImage(buffer));

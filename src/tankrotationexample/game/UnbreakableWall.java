@@ -20,8 +20,8 @@ public class UnbreakableWall extends Wall{
 	public void drawImage(Graphics g){
 		Graphics2D g2 = (Graphics2D) g;
 		g2.drawImage(this.wallImage,x,y,null);
-		g2.setColor(Color.blue);
-		g2.drawRect(x,y,this.wallImage.getWidth(),this.wallImage.getHeight());
+		//g2.setColor(Color.blue);
+		//g2.drawRect(x,y,this.wallImage.getWidth(),this.wallImage.getHeight());
 	}
 	@Override
 	public Rectangle getHitBox() {

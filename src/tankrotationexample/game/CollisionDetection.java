@@ -5,13 +5,10 @@ import java.awt.desktop.SystemEventListener;
 import java.util.ArrayList;
 //maybe just make a method in the TRE. since the arraylist of walls is there. tanks are there.
 public class CollisionDetection {
-        public CollisionDetection(){
-
-        }
         public static void checkPlayers(Tank t1, Tank t2, ArrayList<GameObject> objList){
                 //System.out.println("player checking");
                 if(t1.getHitBox().intersects(t2.getHitBox())){
-                        System.out.println("tank collision");
+                        //System.out.println("tank collision");
                         t1.collisionHappened();
                         t2.collisionHappened();
                 }
@@ -43,8 +40,6 @@ public class CollisionDetection {
         }
         public static void checkBulletsOne(Tank t1, Tank t2, ArrayList<GameObject> gameObjects){
                 GameObject b;
-                //gethitbox isn't working. idk why.
-                //System.out.println("bullet checking");
                 try{
                         for(int x = 0; x < t1.ammoDrumSize(); x++){
                                 for(int y = 0; y < gameObjects.size(); y++){
@@ -59,7 +54,6 @@ public class CollisionDetection {
                                         }else if(gameObjects.get(y) instanceof BreakableWall targetWall &&
                                                 ( targetWall.getHitBox().intersects(b.getHitBox()) ||
                                                         b.getHitBox().intersects(targetWall.getHitBox()) ) ){
-                                                //System.out.println("i hit a breakble wall");
                                                 if(b instanceof Rocket){
                                                         TRE.removeObj(y);
                                                         t1.ammoDrumRemoveBullet(x);
@@ -74,21 +68,18 @@ public class CollisionDetection {
                                 }
                         }
                 }catch(Exception e){
-                        System.out.println(e);
+                        //System.out.println(e);
                 }
 
         }
 
         public static void checkBulletsTwo(Tank t1, Tank t2,ArrayList<GameObject> gameObjects){
                 GameObject b;
-                //System.out.println("bullet checking");
                 try{
                         for(int x = 0; x < t2.ammoDrumSize(); x++){
                                 for(int y = 0; y < gameObjects.size(); y++){
                                         //nested for loop. outer loop for the ammodrum
                                         //inner for loop for the size of the arraylist
-                                        //System.out.println(gameObjects.size());
-                                        //check for bullet or rocket. then assign
                                         b= t2.ammoDrumGetBullet(x);
                                         if(b.getHitBox().intersects(t1.getHitBox())){
                                                 t1.damaged(b);
@@ -101,7 +92,6 @@ public class CollisionDetection {
                                         }else if(gameObjects.get(y) instanceof BreakableWall targetWall &&
                                                 ( targetWall.getHitBox().intersects(b.getHitBox()) ||
                                                    b.getHitBox().intersects(targetWall.getHitBox()) ) ){
-                                                //System.out.println("i hit a breakble wall");
                                                 if(b instanceof Rocket){
                                                         t2.ammoDrumRemoveBullet(x);
                                                         TRE.removeObj(y);
@@ -118,7 +108,5 @@ public class CollisionDetection {
                 }catch(Exception e){
                         //System.out.println(e+"out of bullets?");
                 }
-
         }
-
 }
