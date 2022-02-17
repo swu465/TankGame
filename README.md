@@ -23,7 +23,7 @@ The jar folder is to be used to store the built jar of your term-project.
 
 # Required Information when Submitting Tank Game
 
-## Version of Java Used:
+## Version of Java Used: OpenJDK 16.0.1
 
 ## IDE used: 
 
