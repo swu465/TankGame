@@ -8,9 +8,17 @@ Tank Game is a Java Game application that allows two players to battle each othe
 
 <h3 allign ="center"> Rules:</h3>
 
-
 <img src="resources/tank1.png"/>
-<h3 allign="allign" >Tank Controls:</h3>
+<ol type="1" allign="center">
+ <li>Each tank will have up to three lives, and each life has four health points. </li>
+ <li>There will be two sets of power ups that will spawn once.</li>
+
+<li> There are infinite number of normal shells you can shoot, and each normal shell will deal 1 damage. </li>
+<li>You cannot go through walls. </li>
+ </ol>
+
+
+<h3 allign="center" >Tank Controls:</h3>
 
 |               | Player 1 | Player 2 |
 |---------------|----------|----------|
@@ -20,20 +28,25 @@ Tank Game is a Java Game application that allows two players to battle each othe
 |  Rotate Right |     D    |      Right Arrow    |
 |  Shoot        |     Spacebar     |     Enter     |
 
+<h3 allign="center">In game screenshot</h3>
+<h4 allign="center">Title Screen</h2>
+<img src="resources/titleScreen.png"/>
+<h4 allign = "center">Match Start</h2>
+<img src="resources/startScreen.png"/>
 <h3 allign="center">Enivornment</h3>
 
 <img src="resources/Wall1.gif"/>
-Indestrubile walls
+Indestrubile walls.
 <img src="resources/Wall2.gif"/>
-Breakale walls with x Health points. 
+Breakale walls with 2 Health points. 
 
 <h3 allign = "center">Power ups</h3>
 <img src="resources/Rocket.gif"/>
 Rocket Launcher Power up: Changes normal shells into rockets for 5 shots.
 <img src="resources/sonic.gif"/>
-Speed bost: Speed multipler on tank, and shell movement.
+Speed boost: Tank will move twice as fast for a set duration. 
 <img src="resources/heal.gif"/>
-Health pack: Fully heals your tank. Will not grant extra lives if full HP.
+Health pack: Fully heals your tank. It will be consumed no matter what your health point is at. 
 
 
 <!-- you may add more controls if you need to. -->
