@@ -1,39 +1,16 @@
-# csc413-tankgame
+<h2 allign="center">Tank Game</h2>
+<p allign="center">SFSU 2021 Software Development Project</p>
+<p allign = "center">
+<img src="resources/Title.bmp"/>
+ </p>
+<h3 allign ="center"> What is Tank Game?</h3>
+Tank Game is a Java Game application that allows two players to battle each other in a arena with power up items. 
+
+<h3 allign ="center"> Rules:</h3>
 
 
-| Student Information |                |
-|:-------------------:|----------------|
-|  Student Name       |   Simon Wu     |
-|  Student Email      |swu21@mail.sfsu.edu |
-
-## src Folder Purpose 
-src folder is to be used to store source code only.
-
-## resources Folder Purpose 
-resources folder is to be used to store the resources for your project only. This includes images, sounds, map text files, etc.
-
-`The src and resources folders can be deleted if you want a different file structure`
-
-## jar Folder Purpose 
-The jar folder is to be used to store the built jar of your term-project.
-
-`NO SOURCE CODE SHOULD BE IN THIS FOLDER. DOING SO WILL CAUSE POINTS TO BE DEDUCTED`
-
-`THIS FOLDER CAN NOT BE DELETED OR MOVED`
-
-# Required Information when Submitting Tank Game
-
-## Version of Java Used: OpenJDK 16.0.1
-
-## IDE used: 
-
-## Steps to Import project into IDE:
-
-## Steps to Build your Project:
- 
-## Steps to run your Project:
-
-## Controls to play your Game:
+<img src="resources/tank1.png"/>
+<h3 allign="allign" >Tank Controls:</h3>
 
 |               | Player 1 | Player 2 |
 |---------------|----------|----------|
@@ -42,5 +19,21 @@ The jar folder is to be used to store the built jar of your term-project.
 |  Rotate left  |     A     |     Left Arrow     |
 |  Rotate Right |     D    |      Right Arrow    |
 |  Shoot        |     Spacebar     |     Enter     |
+
+<h3 allign="center">Enivornment</h3>
+
+<img src="resources/Wall1.gif"/>
+Indestrubile walls
+<img src="resources/Wall2.gif"/>
+Breakale walls with x Health points. 
+
+<h3 allign = "center">Power ups</h3>
+<img src="resources/Rocket.gif"/>
+Rocket Launcher Power up: Changes normal shells into rockets for 5 shots.
+<img src="resources/sonic.gif"/>
+Speed bost: Speed multipler on tank, and shell movement.
+<img src="resources/heal.gif"/>
+Health pack: Fully heals your tank. Will not grant extra lives if full HP.
+
 
 <!-- you may add more controls if you need to. -->
